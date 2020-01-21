@@ -30,8 +30,8 @@ def serialize_tag(tag):
 
 
 def index(request):
-    posts = Post.objects.annotate(likes_count=Count('likes'))
-    most_popular_posts = sorted(posts, key=get_likes_count, reverse=True)[:5]
+    annotated_posts = Post.objects.annotate(likes_count=Count('likes'))
+    most_popular_posts = annotated_posts.order_by('-likes_count')[:5]
 
     fresh_posts = Post.objects.order_by('published_at')
     most_fresh_posts = list(fresh_posts)[-5:]
@@ -113,7 +113,3 @@ def contacts(request):
     # позже здесь будет код для статистики заходов на эту страницу
     # и для записи фидбека
     return render(request, 'contacts.html', {})
-
-
-def get_likes_count(post):
-    return post.likes_count
