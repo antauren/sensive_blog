@@ -53,7 +53,7 @@ def index(request):
 def post_detail(request, slug):
     popular_posts = Post.objects.popular()
 
-    post = popular_posts.get(slug=slug)
+    post = popular_posts.select_related('author').get(slug=slug)
 
     comments = post.comments.prefetch_related('author')
 
@@ -63,8 +63,6 @@ def post_detail(request, slug):
                             }
                            for comment in comments]
 
-    likes = post.likes
-
     related_tags = post.tags.popular()
 
     serialized_post = {
@@ -72,7 +70,7 @@ def post_detail(request, slug):
         "text": post.text,
         "author": post.author.username,
         "comments": serialized_comments,
-        'likes_amount': likes.count(),
+        'likes_amount': post.likes.count(),
         "image_url": post.image.url if post.image else None,
         "published_at": post.published_at,
         "slug": post.slug,
