@@ -6,15 +6,15 @@ from django.db.models import Prefetch
 def serialize_post(post):
     tags = post.tags.all()
     return {
-        "title": post.title,
-        "teaser_text": post.text[:200],
-        "author": post.author.username,
-        "comments_amount": post.comments_count,
-        "image_url": post.image.url if post.image else None,
-        "published_at": post.published_at,
-        "slug": post.slug,
+        'title': post.title,
+        'teaser_text': post.text[:200],
+        'author': post.author.username,
+        'comments_amount': post.comments_count,
+        'image_url': post.image.url if post.image else None,
+        'published_at': post.published_at,
+        'slug': post.slug,
 
-        "tags": [serialize_tag(tag) for tag in tags],
+        'tags': [serialize_tag(tag) for tag in tags],
         'first_tag_title': tags[0].title,
 
     }
@@ -66,15 +66,15 @@ def post_detail(request, slug):
     related_tags = post.tags.popular()
 
     serialized_post = {
-        "title": post.title,
-        "text": post.text,
-        "author": post.author.username,
-        "comments": serialized_comments,
+        'title': post.title,
+        'text': post.text,
+        'author': post.author.username,
+        'comments': serialized_comments,
         'likes_amount': post.likes.count(),
-        "image_url": post.image.url if post.image else None,
-        "published_at": post.published_at,
-        "slug": post.slug,
-        "tags": [serialize_tag(tag) for tag in related_tags],
+        'image_url': post.image.url if post.image else None,
+        'published_at': post.published_at,
+        'slug': post.slug,
+        'tags': [serialize_tag(tag) for tag in related_tags],
     }
 
     popular_tags = Tag.objects.popular()
@@ -113,9 +113,9 @@ def tag_filter(request, tag_title):
     most_popular_tags = popular_tags[:5]
 
     context = {
-        "tag": tag.title,
+        'tag': tag.title,
         'popular_tags': [serialize_tag(tag) for tag in most_popular_tags],
-        "posts": [serialize_post(post) for post in related_posts],
+        'posts': [serialize_post(post) for post in related_posts],
         'most_popular_posts': [serialize_post(post) for post in most_popular_posts],
     }
     return render(request, 'posts-list.html', context)
